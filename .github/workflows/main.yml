@@ -1,5 +1,6 @@
 name: Build
 on: [push]
+
 env:
   # The project name specified in your Cargo.toml
   PROJECT_NAME: apple-one
@@ -7,7 +8,8 @@ jobs:
   build:
     # Set the job to run on the platform specified by the matrix below
     runs-on: ${{ matrix.runner }}
- 
+    permissions:
+      contents: write
     # Define the build matrix for cross-compilation
     strategy:
       matrix:
@@ -77,8 +79,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.release_tag }}
           files: |
             build/*
-            LICENSE-MIT
-            LICENSE-APACHE
+            LICENSE
       
       - name: Remove temporary directory
         run: |
