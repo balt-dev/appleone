@@ -29,9 +29,6 @@ jobs:
  
     # The steps to run for each matrix item
     steps:
-      - name: Get current date
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-        
       - name: Checkout
         uses: actions/checkout@v3
  
@@ -61,22 +58,17 @@ jobs:
  
           # Define a better name for the final binary
           BIN_RELEASE="${PROJECT_NAME}-${{ matrix.name }}${BIN_SUFFIX}"
-          BIN_RELEASE_VERSIONED="${PROJECT_NAME}-$NOW-${{ matrix.name }}${BIN_SUFFIX}"
+          BIN_RELEASE_VERSIONED="${PROJECT_NAME}-${{ github.sha }}-${{ matrix.name }}${BIN_SUFFIX}"
           
           # Move the built binary where you want it
           mv "${BIN_OUTPUT}" "build/${BIN_RELEASE}"
-
-      - name: Generate release tag
-        id: tag
-        run: |
-          echo "::set-output name=release_tag::$(date +"%Y.%m.%d_%H-%M")"
           
       - name: Release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
+          tag_name: "Commit ${{ github.sha }}"
           files: |
             build/*
             LICENSE
