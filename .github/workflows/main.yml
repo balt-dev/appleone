@@ -56,7 +56,7 @@ jobs:
           BIN_RELEASE="${PROJECT_NAME}-${{ matrix.name }}${BIN_SUFFIX}"
           BIN_RELEASE_VERSIONED="${PROJECT_NAME}-${{ github.ref_name }}-${{ matrix.name }}${BIN_SUFFIX}"
           
-          rm ./.github/workflows/build/* 
+          rm ./.github/workflows/build/apple* 
 
           # Move the built binary where you want it
           mv "${BIN_OUTPUT}" "./.github/workflows/build/${BIN_RELEASE}"
@@ -65,6 +65,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            .github/workflows/build/*
+            .github/workflows/build/apple*
             LICENSE-MIT
             LICENSE-APACHE
