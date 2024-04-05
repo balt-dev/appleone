@@ -44,6 +44,8 @@ jobs:
       - name: Release Binary
         shell: bash
         run: |
+          mkdir build
+          
           BIN_SUFFIX=""
           if [[ "${{ matrix.runner }}" == "windows-latest" ]]; then
             BIN_SUFFIX=".exe"
@@ -56,15 +58,17 @@ jobs:
           BIN_RELEASE="${PROJECT_NAME}-${{ matrix.name }}${BIN_SUFFIX}"
           BIN_RELEASE_VERSIONED="${PROJECT_NAME}-${{ github.ref_name }}-${{ matrix.name }}${BIN_SUFFIX}"
           
-          rm .github/workflows/build/apple* 
-
           # Move the built binary where you want it
-          mv "${BIN_OUTPUT}" "./.github/workflows/build/${BIN_RELEASE}"
+          mv "${BIN_OUTPUT}" "build/${BIN_RELEASE}"
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            .github/workflows/build/apple*
+            build/*
             LICENSE-MIT
             LICENSE-APACHE
+      
+      - name: Remove temporary directory
+        run: |
+          rm -r build
